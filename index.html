@@ -110,98 +110,69 @@
 		
 			<!-- TODO: So far, this 14-year-old handshake has remained free from attacks, and is even proven secure. However, we show that the 4-way handshake is vulnerable to a key reinstallation attack -->
 
-			<p>Our main attack is against the 4-way handshake of the WPA2 protocol.
-			This handshake is executed when a client wants to join a protected Wi-Fi network, and is used to confirm that both the client and access point possess the correct credentials (e.g. the pre-shared password of the network).
-			At the same time, the 4-way handshake also negotiates a fresh encryption key that will be used to encrypt all subsequent traffic.
-			Currently, all modern protected Wi-Fi networks use the 4-way handshake.
-			This implies all these networks are affected by (some variant of) our attack.
-			For instance, the attack works against personal and enterprise Wi-Fi networks, against the older WPA and the latest WPA2 standard, and even against networks that only use AES.
+			<p>Nuestro ataque principal es contra el handshake (saludo de manos) de 4 vías del protocolo WPA2.
+			Este apretón de manos se ejecuta cuando un cliente desea unirse a una red Wi-Fi protegida, y se utiliza para confirmar que tanto el cliente como el punto de acceso poseen las credenciales correctas (por ejemplo, la contraseña precompartida de la red). Al mismo tiempo, el saludo de 4 vías también negocia una nueva clave de cifrado que se utilizará para cifrar todo el tráfico subsiguiente. Actualmente, todas las redes Wi-Fi protegidas modernas utilizan el protocolo de enlace de 4 vías. Esto implica que todas estas redes se ven afectadas por (alguna variante de) nuestro ataque.
+			Por ejemplo, el ataque funciona contra redes Wi-Fi personales y empresariales, contra el WPA anterior y el último estándar WPA2, e incluso contra redes que solo usan AES.
 			<!-- TODO: flow -->
-			<strong>All our attacks against WPA2 use a novel technique called a key reinstallation attack (KRACK):</strong></p>
+			<strong> Todos nuestros ataques contra WPA2 usan una técnica novedosa llamada ataque de reinstalación clave (KRACK):</strong></p>
 		
-			<h3>Key reinstallation attacks: high level description</h3>
-			<p>In a key reinstallation attack, the adversary tricks a victim into reinstalling an already-in-use key.
-			This is <strong>achieved by manipulating and replaying cryptographic handshake messages</strong>.
-			When the victim reinstalls the key, associated parameters such as the incremental transmit packet number (i.e. nonce) and receive packet number (i.e. replay counter) are reset to their initial value.
-			Essentially, to guarantee security, a key should only be installed and used once.
-			Unfortunately, we found this is not guaranteed by the WPA2 protocol.
-			By manipulating cryptographic handshakes, we can abuse this weakness in practice.</p>
+			<h3>Ataques clave de reinstalación: descripción de alto nivel</h3>
+			<p>En un ataque de reinstalación clave, el adversario engaña a una víctima para que vuelva a instalar una clave que ya está en uso. Esto se logra<strong> manipulando y reproduciendo mensajes criptográficos de comunicación</strong>.
+			Cuando la víctima reinstala la clave, los parámetros asociados, como el número de paquete de transmisión incremental (es decir, nonce) y el número de paquete de recepción (es decir, el contador de reproducción) se restablecen a su valor inicial. Básicamente, para garantizar la seguridad, una clave solo debe instalarse y usarse una vez. Desafortunadamente, encontramos que esto no está garantizado por el protocolo WPA2. Al manipular los apretones de manos criptográficos, podemos abusar de esta debilidad en la práctica.</p>
 		
-			<h3>Key reinstallation attacks: concrete example against the 4-way handshake</h3>
-			<p>As described in the <a href="#paper">introduction of the research paper</a>, the idea behind a key reinstallation attack can be summarized as follows.
-			When a client joins a network, it executes the 4-way handshake to negotiate a fresh encryption key.
-			It will install this key after receiving message 3 of the 4-way handshake.
-			Once the key is installed, it will be used to encrypt normal data frames using an encryption protocol.
-			However, because messages may be lost or dropped, the Access Point (AP) will retransmit message 3 if it did not receive an appropriate response as acknowledgment.
-			As a result, the client may receive message 3 multiple times.
-			Each time it receives this message, it will reinstall the same encryption key, and thereby reset the incremental transmit packet number (nonce) and receive replay counter used by the encryption protocol.
-			We show that <strong>an attacker can force these nonce resets by collecting and replaying retransmissions of message 3 of the 4-way handshake</strong>.
-			By forcing nonce reuse in this manner, the encryption protocol can be attacked, e.g., packets can be replayed, decrypted, and/or forged.
-			The same technique can also be used to attack the group key, PeerKey, TDLS, and fast BSS transition handshake.</p>
+			<h3>Ataques clave de reinstalación: ejemplo concreto contra el apretón de manos de 4 vías</h3>
+			<p>Como se describe en la <a href="#paper">introducción del documento de investigación</a>, la idea detrás de un ataque clave de reinstalación se puede resumir de la siguiente manera. Cuando un cliente se une a una red, ejecuta el enlace de 4 vías para negociar una nueva clave de cifrado. Instalará esta tecla después de recibir el mensaje 3 del apretón de manos de 4 vías. Una vez que se instala la clave, se usará para cifrar los marcos de datos normales utilizando un protocolo de encriptación. Sin embargo, como los mensajes se pueden perder o descartar, el Punto de acceso (AP) retransmitirá el mensaje 3 si no recibió una respuesta apropiada como acuse de recibo. Como resultado, el cliente puede recibir el mensaje 3 varias veces. Cada vez que recibe este mensaje, reinstalará la misma clave de cifrado y, por lo tanto, reiniciará el número de paquete de transmisión incremental (nonce) y recibirá el contador de reproducción utilizado por el protocolo de cifrado. Mostramos que <strong>un atacante puede forzar estos restablecimientos nonce recolectando y reproduciendo retransmisiones del mensaje 3 del saludo de 4 vías</strong>.
+			Al forzar la reutilización del nonce de esta manera, el protocolo de encriptación puede ser atacado, por ejemplo, los paquetes pueden ser reproducidos, descifrados y / o forjados. La misma técnica también se puede utilizar para atacar a la clave de grupo, PeerKey, TDLS, y rápido enlace de transición BSS.</p>
 		
 			<!-- TODO: Once we also made a presentation, we can include a diagram / figure describing the attack -->
 		
-			<h3>Practical impact</h3>
+			<h3>Impacto practico</h3>
 						
-			<p>In our opinion, the most widespread and practically impactful attack is the key reinstallation attack against the 4-way handshake.
-			We base this judgement on two observations.
-			First, during our own research we found that most clients were affected by it.
-			Second, adversaries can use this attack to decrypt packets sent by clients, allowing them to intercept sensitive information such as passwords or cookies.
-			Decryption of packets is possible because a key reinstallation attack causes the transmit nonces (sometimes also called packet numbers or initialization vectors) to be reset to zero.
-			As a result, <strong>the same encryption key is used with nonce values that have already been used in the past</strong>.
-			In turn, this causes all encryption protocols of WPA2 to reuse <a href="https://en.wikipedia.org/wiki/Keystream">keystream</a> when encrypting packets.
-			In case a message that reuses keystream has known content, it becomes trivial to derive the used keystream.
-			This keystream can then be used to decrypt messages with the same nonce.
-			When there is no known content, it is harder to decrypt packets, although still possible in several cases (e.g. <a href="https://crypto.stackexchange.com/a/2250">English text can still be decrypted</a>).
+			<p>En nuestra opinión, el ataque más extendido y prácticamente impactante es el ataque de reinstalación clave contra el apretón de manos de 4 vías. 
+			Basamos este juicio en dos observaciones. 
+			Primero, durante nuestra propia investigación encontramos que la mayoría de los clientes se vieron afectados por ella.
+			En segundo lugar, los adversarios pueden usar este ataque para descifrar los paquetes enviados por los clientes, lo que les permite interceptar información confidencial, como contraseñas o cookies. El descifrado de paquetes es posible porque un ataque de reinstalación de clave hace que los números de transmisión (a veces también denominados números de paquete o vectores de inicialización) se restablezcan a cero. Como resultado, <strong>se usa la misma clave de cifrado con valores nonce que ya se han usado en el pasado</strong>.
+			A su vez, esto hace que todos los protocolos de encriptación de WPA2 reutilicen el <a href="https://en.wikipedia.org/wiki/Keystream">flujo de claves</a> al encriptar los paquetes.
+			En caso de que un mensaje que reutilice el flujo de claves tenga contenido conocido, se vuelve trivial derivar el flujo de claves usado. Este flujo de claves se puede usar para descifrar mensajes con el mismo valor. Cuando no hay contenido conocido, es más difícil descifrar paquetes, aunque aún es posible en varios casos (por ejemplo, <a href="https://crypto.stackexchange.com/a/2250">el texto en inglés todavía se puede descifrar</a>).
 			<!-- TODO: We can mention encrypted message 4's are usefull for this? -->
-			In practice, finding packets with known content is not a problem, so it should be assumed that any packet can be decrypted.
+			En la práctica, encontrar paquetes con contenido conocido no es un problema, por lo que se debe suponer que cualquier paquete puede descifrarse.
 			</p>
 			
-			<p>The ability to decrypt packets can be used to decrypt TCP SYN packets.
-			This allows an adversary to obtain the TCP sequence numbers of a connection, and <a href="https://en.wikipedia.org/wiki/TCP_sequence_prediction_attack">hijack TCP connections</a>.
-			As a result, even though WPA2 is used, the adversary can now perform one of the most common attacks against open Wi-Fi networks: injecting malicious data into unencrypted HTTP connections.
-			For example, an attacker can abuse this to inject ransomware or malware into websites that the victim is visiting.</p>
+			<p>La capacidad de descifrar paquetes puede usarse para descifrar TCP SYN paquetes. Esto permite a un adversario obtener los números de secuencia TCP de una conexión y <a href="https://en.wikipedia.org/wiki/TCP_sequence_prediction_attack"> secuestrar las conexiones TCP</a>.
+			Como resultado, aunque se usa WPA2, el adversario ahora puede realizar uno de los ataques más comunes contra redes Wi-Fi abiertas: inyectar datos maliciosos en conexiones HTTP no cifradas. Por ejemplo, un atacante puede abusar de esto para inyectar ransomware o malware en sitios web que la víctima está visitando.</p>
 			
-			<p>If the victim uses either the WPA-TKIP or GCMP encryption protocol, instead of AES-CCMP, the impact is especially catastrophic.
-			<b>Against these encryption protocols, nonce reuse enables an adversary to not only decrypt, but also to forge and inject packets</b>.
-			Moreover, because GCMP uses the same authentication key in both communication directions, and this key can be recovered if nonces are reused, it is especially affected.
-			Note that support for GCMP is currently being rolled out under the name Wireless Gigabit (WiGig), and is expected to be <a href="http://www.grandviewresearch.com/press-release/global-wireless-gigabit-wigig-market">adopted at a high rate</a> over the next few years.</p>
+			<p>Si la víctima usa el protocolo de cifrado WPA-TKIP o GCMP, en lugar de AES-CCMP, el impacto es especialmente catastrófico.
+			<b>Contra estos protocolos de encriptación, la reutilización de nonce permite a un adversario no solo descifrar, sino también forjar e inyectar paquetes</b>.
+			Además, debido a que GCMP utiliza la misma clave de autenticación en ambas direcciones de comunicación, y esta clave se puede recuperar si los números se reutilizan, se ve especialmente afectada. Tenga en cuenta que la compatibilidad con GCMP se está actualizando con el nombre Wireless Gigabit (WiGig), y se espera que se  <a href="http://www.grandviewresearch.com/press-release/global-wireless-gigabit-wigig-market">adopte a un ritmo elevado</a> en los próximos años.</p>
 			
-			<p>The direction in which packets can be decrypted (and possibly forged) depends on the handshake being attacked.
-			Simplified, when attacking the 4-way handshake, we can decrypt (and forge) packets sent <em>by</em> the client.
-			When attacking the Fast BSS Transition (FT) handshake, we can decrypt (and forge) packets sent <em>towards</em> the client.
-			Finally, most of our attacks also allow the replay of unicast, broadcast, and multicast frames.
-			For further details, see Section 6 of <a href="#paper">our research paper</a>.</p>
+			<p>La dirección en la que los paquetes pueden descifrarse (y posiblemente forjarse) depende del apretón de manos que se está atacando. Simplificado, al atacar el enlace de 4 vías, podemos descifrar (y forjar) los paquetes enviados por el cliente. Al atacar el apretón de manos de Fast BSS Transition (FT), podemos descifrar (y forjar) los paquetes enviados al cliente. Finalmente, la mayoría de nuestros ataques también permiten la reproducción de tramas unidifusión, difusión y multidifusión. Para más detalles, consulte la Sección 6 de <a href="#paper">nuestro trabajo de investigación </a>.</p>
 			
-			<p>Note that our attacks <b>do not recover the password of the Wi-Fi network</b>. They also do not recover (any parts of) the fresh encryption key that is negotiated during the 4-way handshake.</p>
+			<p>Tenga en cuenta que nuestros ataques  <b>no recuperan la contraseña de la red Wi-Fi</b>.  Tampoco recuperan (ninguna parte de) la nueva clave de cifrado que se negocia durante el apretón de manos de 4 vías.</p>
 			
 			<a name="details-android" ></a>
-			<h3>Android and Linux</h3>
+			<h3>Android y Linux</h3>
 
-			<p>Our attack is especially catastrophic against version 2.4 and above of wpa_supplicant, a Wi-Fi client commonly used on Linux.
-			Here, the client will install an all-zero encryption key instead of reinstalling the real key.
-			This vulnerability appears to be caused by a remark in the Wi-Fi standard that suggests to clear the encryption key from memory once it has been installed for the first time.
-			When the client now receives a retransmitted message 3 of the 4-way handshake, it will reinstall the now-cleared encryption key, effectively installing an all-zero key.
-			Because Android uses wpa_supplicant, Android 6.0 and above also contains this vulnerability.
-			This makes it <strong>trivial to intercept and manipulate traffic sent by these Linux and Android devices</strong>.
+			<p>Nuestro ataque es especialmente catastrófico contra la versión 2.4 y superior de wpa_supplicant, un cliente Wi-Fi comúnmente usado en Linux. 
+			Aquí, el cliente instalará una clave de cifrado totalmente cero en lugar de reinstalar la clave real. Esta vulnerabilidad parece ser causada por un comentario en el estándar Wi-Fi que sugiere borrar la clave de cifrado de la memoria una vez que se instaló por primera vez. 
+			Cuando el cliente recibe ahora un mensaje retransmitido 3 del saludo de 4 vías, volverá a instalar la clave de cifrado ahora borrada, instalando efectivamente una clave de cero. Como Android usa wpa_supplicant, Android 6.0 y superior también contiene esta vulnerabilidad. Esto hace que sea <strong>trivial interceptar y manipular el tráfico enviado por estos dispositivos Linux y Android </strong>.
 			<!-- TODO: Should double-check that carries don't mess with the wpa_supplicant version... -->
-			Note that currently <a href="https://developer.android.com/about/dashboards/index.html">41% of Android devices</a> are vulnerable to this exceptionally devastating variant of our attack.</p>
+			Tenga en cuenta que actualmente el <a href="https://developer.android.com/about/dashboards/index.html">41% de los dispositivos Android</a> son vulnerables a esta variante excepcionalmente devastadora de nuestro ataque.</p>
 		
-			<h3>Assigned CVE identifiers</h3>
-			<p>The following Common Vulnerabilities and Exposures (CVE) identifiers were assigned to track which products are affected by specific instantiations of our key reinstallation attack:</p>
+			<h3>Identificadores CVE Asignados</h3>
+			<p>Se asignaron los siguientes identificadores y vulnerabilidades comunes (CVE, por sus siglas en inglés) para rastrear qué productos se ven afectados por instancias específicas de nuestro ataque de reinstalación clave:</p>
 			<ul>
-				<li><a href="https://nvd.nist.gov/vuln/detail/CVE-2017-13077">CVE-2017-13077</a>: Reinstallation of the pairwise encryption key (PTK-TK) in the 4-way handshake.</li>
-				<li><a href="https://nvd.nist.gov/vuln/detail/CVE-2017-13078">CVE-2017-13078</a>: Reinstallation of the group key (GTK) in the 4-way handshake.</li>
-				<li><a href="https://nvd.nist.gov/vuln/detail/CVE-2017-13079">CVE-2017-13079</a>: Reinstallation of the integrity group key (IGTK) in the 4-way handshake.</li>
-				<li><a href="https://nvd.nist.gov/vuln/detail/CVE-2017-13080">CVE-2017-13080</a>: Reinstallation of the group key (GTK) in the group key handshake.</li>
-				<li><a href="https://nvd.nist.gov/vuln/detail/CVE-2017-13081">CVE-2017-13081</a>: Reinstallation of the integrity group key (IGTK) in the group key handshake.</li>
-				<li><a href="https://nvd.nist.gov/vuln/detail/CVE-2017-13082">CVE-2017-13082</a>: Accepting a retransmitted Fast BSS Transition (FT) Reassociation Request and reinstalling the pairwise encryption key (PTK-TK) while processing it.</li>
-				<li><a href="https://nvd.nist.gov/vuln/detail/CVE-2017-13084">CVE-2017-13084</a>: Reinstallation of the STK key in the PeerKey handshake.</li>
-				<li><a href="https://nvd.nist.gov/vuln/detail/CVE-2017-13086">CVE-2017-13086</a>: reinstallation of the Tunneled Direct-Link Setup (TDLS) PeerKey (TPK) key in the TDLS handshake.</li>
-				<li><a href="https://nvd.nist.gov/vuln/detail/CVE-2017-13087">CVE-2017-13087</a>: reinstallation of the group key (GTK) when processing a Wireless Network Management (WNM) Sleep Mode Response frame.</li>
-				<li><a href="https://nvd.nist.gov/vuln/detail/CVE-2017-13088">CVE-2017-13088</a>: reinstallation of the integrity group key (IGTK) when processing a Wireless Network Management (WNM) Sleep Mode Response  frame.</li>
+				<li><a href="https://nvd.nist.gov/vuln/detail/CVE-2017-13077">CVE-2017-13077</a>: Reinstalación de la clave de encriptación pairwise (PTK-TK) en el enlace de 4 vías.</li>
+				<li><a href="https://nvd.nist.gov/vuln/detail/CVE-2017-13078">CVE-2017-13078</a>: Reinstalación de la clave de grupo (GTK) en el enlace de 4 vías.</li>
+				<li><a href="https://nvd.nist.gov/vuln/detail/CVE-2017-13079">CVE-2017-13079</a>: Reinstalación de la clave del grupo de integridad (IGTK) en el enlace de 4 vías.</li>
+				<li><a href="https://nvd.nist.gov/vuln/detail/CVE-2017-13080">CVE-2017-13080</a>: Reinstalación de la clave de grupo (GTK) en el apretón de manos de grupo.</li>
+				<li><a href="https://nvd.nist.gov/vuln/detail/CVE-2017-13081">CVE-2017-13081</a>: Reinstalación de la clave de grupo de integridad (IGTK) en el apretón de manos de grupo.</li>
+				<li><a href="https://nvd.nist.gov/vuln/detail/CVE-2017-13082">CVE-2017-13082</a>: aceptación de una solicitud de reasignación de transición rápida de BSS (FT) y reinstalación de la clave de cifrado por parejas (PTK-TK) mientras la procesa.</li>
+				<li><a href="https://nvd.nist.gov/vuln/detail/CVE-2017-13084">CVE-2017-13084</a>:  Reinstalación de la tecla STK en el apretón de manos PeerKey.</li>
+				<li><a href="https://nvd.nist.gov/vuln/detail/CVE-2017-13086">CVE-2017-13086</a>: reinstalación de la clave de configuración de enlace directo Tunneled (TDLS) PeerKey (TPK) en el apretón de manos TDLS.</li>
+				<li><a href="https://nvd.nist.gov/vuln/detail/CVE-2017-13087">CVE-2017-13087</a>: reinstalación de la clave de grupo (GTK) al procesar un marco de respuesta de modo de suspensión de gestión de red inalámbrica (WNM).</li>
+				<li><a href="https://nvd.nist.gov/vuln/detail/CVE-2017-13088">CVE-2017-13088</a>: reinstalación de la clave de grupo de integridad (IGTK) al procesar un marco de respuesta de modo de suspensión de gestión de red inalámbrica (WNM).</li>
 			</ul>
-			<p>Note that each CVE identifier represents a specific instantiation of a key reinstallation attack. This means each CVE ID describes a specific protocol vulnerability, and therefore <b>many vendors are affected by each individual CVE ID</b>. You can also read <a href="https://www.kb.cert.org/vuls/id/228519">vulnerability note VU#228519</a> of CERT/CC for additional details on which products are known to be affected.</p>
+			<p>Tenga en cuenta que cada identificador de CVE representa una instanciación específica de un ataque de reinstalación de clave. Esto significa que cada ID de CVE describe una vulnerabilidad de protocolo específica y, por lo tanto, <b>muchos proveedores se ven afectados por cada ID de CVE individual </b>. También puede leer la <a href="https://www.kb.cert.org/vuls/id/228519">nota de vulnerabilidad VU # 228519</a>de CERT / CC para obtener detalles adicionales sobre qué productos se sabe que están afectados.</p>
 			<p></p>
 		<!-------------------- PAPER -------------------->
 		
@@ -209,16 +180,11 @@
 		<h2>Paper</h2>
 		
 		<!-- TODO: Put our slides here as well, once I finished them -->
-		<p>Our research paper behind the attack is titled <a href="https://papers.mathyvanhoef.com/ccs2017.pdf">Key Reinstallation Attacks: Forcing Nonce Reuse in WPA2</a> and will be presented at the <a href="https://www.sigsac.org/ccs/CCS2017/">Computer and Communications Security (CCS)</a> conference on <a href="https://acmccs.github.io/session-F3/">Wednesday 1 November 2017</a>.
+		<p>Nuestro documento de investigación detrás del ataque se titula <a href="https://papers.mathyvanhoef.com/ccs2017.pdf">Ataques de reinstalación clave: Forzar la reutilización de elementos no utilizados en WPA2</a> y se presentará en la <a href="https://www.sigsac.org/ccs/CCS2017/">conferencia sobre seguridad informática y comunicaciones (CCS)</a> el <a href="https://acmccs.github.io/session-F3/">miércoles 1 de noviembre de 2017</a>.
 
-		<p>Although this paper is made public now, it was already submitted for review on 19 May 2017.
-		After this, only minor changes were made.
-		As a result, the findings in the paper are already several months old.
-		In the meantime, we have found easier techniques to carry out our key reinstallation attack against the 4-way handshake.
-		With our novel attack technique, it is now trivial to exploit implementations that only accept encrypted retransmissions of message 3 of the 4-way handshake.
-		In particular this means that <strong>attacking macOS and OpenBSD is significantly easier than discussed in the paper</strong>.</p>
+		<p>Aunque este documento se hizo público ahora, ya se presentó para su revisión el 19 de mayo de 2017. Después de esto, solo se hicieron cambios menores. Como resultado, los hallazgos en el documento ya tienen varios meses. Mientras tanto, hemos encontrado técnicas más fáciles para llevar a cabo nuestro ataque de reinstalación clave contra el apretón de manos de 4 vías. Con nuestra novedosa técnica de ataque, ahora es trivial explotar implementaciones que solo aceptan retransmisiones encriptadas del mensaje 3 del apretón de manos de 4 vías. En particular, esto significa que <strong>atacar a macOS y OpenBSD es significativamente más fácil de lo que se describe en el artículo</strong>.</p>
 		
-		<p>We would like to highlight the following addendums and errata:</p>
+		<p>Nos gustaría resaltar los siguientes addendums y erratas:</p>
 		
 		<h3>Addendum: wpa_supplicant v2.6 and Android 6.0+</h3>
 		
