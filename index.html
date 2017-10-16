@@ -4,7 +4,7 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<title>KRACK Attacks: Breaking WPA2</title>
 	<meta name="keywords" content="WPA2, KRACK, key reinstallation, security protocols, network security, attacks, nonce reuse, handshake, packet number, initialization vector, Mathy Vanhoef" />
-	<meta name="description" content="This website presents the Key Reinstallation Attack (KRACK). It breaks the WPA2 protocol by forcing nonce reuse in encryption algorithms used by Wi-Fi." />
+	<meta name="description" content="Este sitio presenta el Ataque de Reinstalación de clave (KRACK) [Español]. Rompe el protocolo WPA2 forzando la reutilización de nonce en los algoritmos de cifrado utilizados por Wi-Fi." />
 	<link href="css/default.css" rel="stylesheet" type="text/css" media="all" />
 	
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -32,9 +32,9 @@
 			</div>
 			<div id="title">
 				<h1><b>K</b>ey <b>R</b>einstallation <b>A</b>tta<b>ck</b>s</h1>
-				<h2>Breaking WPA2 by forcing nonce reuse</h2>
+				<h2>Rompiendo WPA2 forzando la reutilización del nonce</h2>
 				
-				<h3>Discovered by <a href="https://twitter.com/vanhoefm">Mathy Vanhoef</a> of <a href="https://distrinet.cs.kuleuven.be/">imec-DistriNet</a>, KU Leuven</h3>
+				<h3>Descubierto por <a href="https://twitter.com/vanhoefm">Mathy Vanhoef</a> e <a href="https://distrinet.cs.kuleuven.be/">imec-DistriNet</a>, KU Leuven</h3>
 			</div>
 			
 		</div>
@@ -45,7 +45,7 @@
 			<ul class="menu">
 				<li class="page_item"><a href="#intro">Intro</a></li>
 				<li class="page_item"><a href="#demo">Demo</a></li>
-				<li class="page_item"><a href="#details">Details</a></li>
+				<li class="page_item"><a href="#details">Detalles</a></li>
 				<li class="page_item"><a href="#paper">Paper</a></li>
 				<li class="page_item"><a href="#tools">Tools</a></li>
 				<li class="page_item"><a href="#faq">Q&amp;A</a></li>
@@ -57,56 +57,56 @@
 		<!-------------------- INTRO -------------------->
 
 		<a name="intro" ></a>
-		<h2 class="firsttitle">Introduction</h2>
-		<p>We discovered serious weaknesses in WPA2, a protocol that secures all modern protected Wi-Fi networks.
-		An attacker within range of a victim can exploit these weaknesses using <u>k</u>ey <u>r</u>einstallation <u>a</u>tta<u>ck</u>s (KRACKs).
-		Concretely, attackers can use this novel attack technique to read information that was previously assumed to be safely encrypted.	
-		This can be abused to steal sensitive information such as credit card numbers, passwords, chat messages, emails, photos, and so on.
-		<strong>The attack works against all modern protected Wi-Fi networks</strong>.
-		Depending on the network configuration, it is also possible to inject and manipulate data.
-		For example, an attacker might be able to inject ransomware or other malware into websites.</p>
+		<h2 class="firsttitle">Introducción</h2>
+		<p>Descubrimos serias debilidades en WPA2, el protocolo que asegura todas las redes Wi-Fi protegidas modernas.
+		Un atacante dentro del alcance de una víctima puede explotar estas debilidades usando <u>k</u>ey <u>r</u>einstallation <u>a</u>tta<u>ck</u>s (KRACKs).
+		Concretamente, los atacantes pueden usar esta nueva técnica de ataque para leer información que previamente se suponía que estaba cifrada de forma segura.
+		Esto se puede abusar para robar información confidencial, como números de tarjetas de crédito, contraseñas, mensajes de chat, correos electrónicos, fotos, etc.
+		<strong>El ataque funciona contra todas las redes Wi-Fi protegidas modernas</strong>.
+		Dependiendo de la configuración de la red, también es posible inyectar y manipular datos.
+		Por ejemplo, un atacante podría inyectar ransomware u otro malware en sitios web.</p>
 		
-		<p>The weaknesses are in the Wi-Fi standard itself, and not in individual products or implementations.
-		Therefore, any correct implementation of WPA2 is likely affected.
-		To prevent the attack, users must update affected products as soon as security updates become available.
-		Note that <strong>if your device supports Wi-Fi, it is most likely affected</strong>.
-		During our initial research, we discovered ourselves that Android, Linux, Apple, Windows, OpenBSD, MediaTek, Linksys, and others, are all affected by some variant of the attacks.
+		<p>Las debilidades están en el estándar Wi-Fi en sí, y no en productos individuales o implementaciones.
+		Por lo tanto, es probable que se vea afectada cualquier implementación correcta de WPA2.
+		Para evitar el ataque, los usuarios deben actualizar los productos afectados tan pronto como las actualizaciones de seguridad estén disponibles.
+		Tenga en cuenta que <strong>si su dispositivo es compatible con Wi-Fi, lo más probable es que se vea afectado</strong>.
+		Durante nuestra investigación inicial, descubrimos que Android, Linux, Apple, Windows, OpenBSD, MediaTek, Linksys y otros, se ven afectados por alguna variante de los ataques.
 		For more information about specific products, consult the <a href="https://www.kb.cert.org/vuls/byvendor?searchview&Query=FIELD+Reference=228519&SearchOrder=4">database of CERT/CC</a>, or contact your vendor.</p>
 		
-		<p>The research behind the attack will be presented at the <a href="https://acmccs.github.io/session-F3/">Computer and Communications Security (CCS)</a> conference, and at the <a href="https://www.blackhat.com/eu-17/briefings/schedule/#key-reinstallation-attacks-breaking-the-wpa2-protocol-8861">Black Hat Europe</a> conference. Our <a href="#paper">detailed research paper</a> can already be downloaded.</p>
+		<p>Para obtener más información sobre productos específicos, consulte la <a href="https://acmccs.github.io/session-F3/">conferencia de seguridad de computadoras y comunicaciones (CCS)</a> , y en la <a href="https://www.blackhat.com/eu-17/briefings/schedule/#key-reinstallation-attacks-breaking-the-wpa2-protocol-8861">Black Hat Europe</a> conference. Nuestro <a href="#paper">documento de investigación detallado</a> ya se puede descargar.</p>
 
 		<!-------------------- DEMO -------------------->
 		
         <a name="demo" ></a>
-		<h2>Demonstration</h2>
-		<p>As a proof-of-concept we executed a key reinstallation attack against an Android smartphone.
-			In this demonstration, the attacker is able to decrypt all data that the victim transmits.
-			For an attacker this is easy to accomplish, because our key reinstallation attack is exceptionally devastating against Linux and Android 6.0 or higher.
-			This is because <strong>Android and Linux can be tricked into (re)installing an all-zero encryption key</strong> (<a href="#details-android">see below for more info</a>).
-			When attacking other devices, it is harder to decrypt all packets, although a large number of packets can nevertheless be decrypted.
-			In any case, the following demonstration highlights the type of information that an attacker can obtain when performing key reinstallation attacks against protected Wi-Fi networks:
+		<h2>Demonstración</h2>
+		<p>Como prueba de concepto, ejecutamos un ataque clave de reinstalación contra un teléfono inteligente Android.
+			En esta demostración, el atacante puede descifrar todos los datos que transmite la víctima.
+			Para un atacante, esto es fácil de lograr, porque nuestro ataque de reinstalación clave es excepcionalmente devastador contra Linux y Android 6.0 o superior.
+			Esto es porque <strong>Android y Linux pueden engañarse para (re) instalar una clave de cifrado totalmente en ceros</strong> (<a href="#details-android">ver más abajo para más información</a>).
+			Al atacar a otros dispositivos, es más difícil descifrar todos los paquetes, aunque se puede descifrar un gran número de paquetes.
+			En cualquier caso, la siguiente demostración destaca el tipo de información que un atacante puede obtener al realizar ataques de reinstalación de claves contra redes de Wi-Fi protegidas:
 		</p>
 		<div class="demo-video">
 		<div class="demo-video-container">
 			<iframe width="853" height="480" src="https://www.youtube-nocookie.com/embed/Oh4WURZoR98?rel=0&amp;showinfo=0&amp;vq=hd720" frameborder="0" allowfullscreen></iframe>
 		</div>
 		</div>
-		<p>Our attack is not limited to recovering login credentials (i.e. e-mail addresses and passwords).
-			In general, any data or information that the victim transmits can be decrypted. Additionally, depending on the device being used and the network setup, it is also possible to decrypt data sent towards the victim (e.g. the content of a website).
-			Although websites or apps may use HTTPS as an additional layer of protection, we warn that this extra protection can (still) be bypassed in a worrying number of situations.
+		<p>Nuestro ataque no se limita a recuperar credenciales de inicio de sesión (es decir, direcciones de correo electrónico y contraseñas).
+			En general, cualquier dato o información que la víctima transmita puede descifrarse. Además, según el dispositivo utilizado y la configuración de la red, también es posible descifrar los datos enviados a la víctima (por ejemplo, el contenido de un sitio web).
+			Aunque los sitios web o las aplicaciones pueden usar HTTPS como una capa adicional de protección, le advertimos que esta protección extra puede (todavía) pasarse por alto en un número preocupante de situaciones.
 			<!-- https://docs.google.com/spreadsheets/d/1t5GXwjw82SyunALVJb2w0zi3FoLRIkfGPc7AMjRF0r4/edit#gid=1053404143 -->
-			For example, HTTPS was previously bypassed in <a href="https://pdfs.semanticscholar.org/48fc/8f1aa0b6d1e4266b8017820ff8770fb67b6f.pdf">non-browser software</a>,
-			in <a href="https://www.imperialviolet.org/2014/02/22/applebug.html">Apple's iOS and OS X</a>,
-			in <a href="https://arstechnica.com/information-technology/2015/04/android-apps-still-suffer-game-over-https-defects-7-months-later/">Android apps</a>,
-			in <a href="https://arxiv.org/ftp/arxiv/papers/1505/1505.00589.pdf">Android apps again</a>,
-			in <a href="http://blog.ioactive.com/2014/01/personal-banking-apps-leak-info-through.html">banking apps</a>,
-			and even in <a href="https://arstechnica.com/information-technology/2017/01/majority-of-android-vpns-cant-be-trusted-to-make-users-more-secure/">VPN apps</a>.
+			Por ejemplo, HTTPS se omitió anteriormente en <a href="https://pdfs.semanticscholar.org/48fc/8f1aa0b6d1e4266b8017820ff8770fb67b6f.pdf">non-browser software</a>,
+			en <a href="https://www.imperialviolet.org/2014/02/22/applebug.html">iOS y OS X de Apple</a>,
+			en <a href="https://arstechnica.com/information-technology/2015/04/android-apps-still-suffer-game-over-https-defects-7-months-later/">Android apps</a>,
+			en <a href="https://arxiv.org/ftp/arxiv/papers/1505/1505.00589.pdf">Android apps nuevamente</a>,
+			en <a href="http://blog.ioactive.com/2014/01/personal-banking-apps-leak-info-through.html">aplicaciones bancarias</a>,
+			e incluso en <a href="https://arstechnica.com/information-technology/2017/01/majority-of-android-vpns-cant-be-trusted-to-make-users-more-secure/">aplicaciones VPN</a>.
 			</p>
 
 		<!-------------------- DETAILS -------------------->
 			
 		<a name="details" ></a>
-		<h2>Details</h2>
+		<h2>Detalles</h2>
 		
 			<!-- TODO: So far, this 14-year-old handshake has remained free from attacks, and is even proven secure. However, we show that the 4-way handshake is vulnerable to a key reinstallation attack -->
 
